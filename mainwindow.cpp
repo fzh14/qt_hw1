@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QtDebug>
+#include <QVector>
+#include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -9,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->frame->hide();
     setWindowTitle("Sudo_FZH");
+    QPixmap pix=QPixmap("/Users/ivanfzh/Desktop/qt_summer/week1/hw1/title.png");
+    ui->title_label->setPixmap(pix);
+    ui->title_label->show();
     isStart = false;     //初始为还未计时
     timer = new QTimer;  //初始化定时器
     TimeRecord = new QTime(0, 0, 0); //初始化时间
@@ -60,10 +65,8 @@ void MainWindow::on_pushButton_clicked()
             }
         }
     }
-    for(int i=0;i<10;i++){
-        for(int j=0;j<3;j++)
-            ui->widget->logic->undo[i][j]=-1;
-    }
+    ui->widget->logic->vector.clear();
+    ui->widget->logic->undo_vector.clear();
     ui->widget->grid_num=0;
     ui->widget->chooseGrid=false;
     ui->widget->chooseNum=false;
@@ -74,20 +77,11 @@ void MainWindow::on_num1_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 1;
-        ui->widget->grid_num = 1;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 1;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=1;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 1;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -101,20 +95,11 @@ void MainWindow::on_num2_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 2;
-        ui->widget->grid_num = 2;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 2;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=2;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 2;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -128,20 +113,11 @@ void MainWindow::on_num3_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 3;
-        ui->widget->grid_num = 3;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 3;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=3;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 3;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -155,20 +131,11 @@ void MainWindow::on_num4_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 4;
-        ui->widget->grid_num = 4;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 4;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=4;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 4;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -182,20 +149,11 @@ void MainWindow::on_num5_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 5;
-        ui->widget->grid_num = 5;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 5;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=5;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 5;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -209,20 +167,11 @@ void MainWindow::on_num6_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 6;
-        ui->widget->grid_num = 6;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 6;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=6;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 6;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -236,20 +185,11 @@ void MainWindow::on_num7_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 7;
-        ui->widget->grid_num = 7;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 7;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=7;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 7;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -263,20 +203,11 @@ void MainWindow::on_num8_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 8;
-        ui->widget->grid_num = 8;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 8;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=8;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 8;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -290,20 +221,11 @@ void MainWindow::on_num9_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(ui->widget->chooseGrid == true){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 9;
-        ui->widget->grid_num = 9;
-        ui->widget->chooseNum = true;
-        ui->widget->selectNum();
-    }
-    else if(ui->widget->logic->initial[y][x]==0){
-        int p_value = ui->widget->logic->matrix[y][x];
-        int t[3]={y,x,p_value};
-        ui->widget->logic->addlog(t);
-        ui->widget->logic->matrix[y][x] = 9;
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=9;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
         ui->widget->grid_num = 9;
         ui->widget->chooseNum = true;
         ui->widget->selectNum();
@@ -331,18 +253,16 @@ void MainWindow::on_button_del_clicked()
 {
     int x = ui->widget->grid_x/60;
     int y = ui->widget->grid_y/60;
-    if(x>=0 && y>=0){
-        int k = ui->widget->logic->initial[y][x];
-        if(k==0){
-            int p_value = ui->widget->logic->matrix[y][x];
-            int t[3]={y,x,p_value};
-            ui->widget->logic->addlog(t);
-            ui->widget->logic->matrix[y][x]=-1;
-        }
-        else
-            qDebug()<<"can't delete";
+
+    if(ui->widget->logic->initial[y][x]==0){
+        int *t = new int[3];
+        t[0]=y;t[1]=x;t[2]=-2;
+        ui->widget->logic->vector.append(t);
+        ui->widget->logic->undo_vector.clear();
+        ui->widget->chooseNum = false;
+        ui->widget->selectNum();
     }
-    ui->widget->repaint();
+    //ui->widget->repaint();
 }
 
 void MainWindow::on_stage1_clicked()
@@ -353,6 +273,8 @@ void MainWindow::on_stage1_clicked()
     isStart = true;
     ui->frame->show();
     ui->frame_2->hide();
+    ui->widget->chooseGrid=false;
+    ui->widget->chooseNum=false;
     ui->widget->logic->setStage(1);
 }
 
@@ -365,34 +287,28 @@ void MainWindow::on_stage2_clicked()
     isStart = true;
     ui->frame->show();
     ui->frame_2->hide();
+    ui->widget->chooseGrid=false;
+    ui->widget->chooseNum=false;
     ui->widget->logic->setStage(2);
 }
 
 void MainWindow::on_undo_clicked()
 {
-    int temp[3];
-    for(int i=0;i<3;i++)
-        temp[i]=ui->widget->logic->undo[0][i];
-
-    if(temp[0]!=-1 && temp[1]!=-1){
-        for(int i=0;i<9;i++){
-            for(int j=0;j<3;j++)
-                ui->widget->logic->undo[i][j]=ui->widget->logic->undo[i+1][j];
-        }
-        for(int i=8;i>0;i--){
-            for(int j=0;j<3;j++){
-                ui->widget->logic->predo[i][j]=ui->widget->logic->predo[i-1][j];
-            }
-        }
-        ui->widget->logic->predo[0][0]=temp[0];
-        ui->widget->logic->predo[0][1]=temp[1];
-        ui->widget->logic->predo[0][2]=ui->widget->logic->matrix[temp[0]][temp[1]];
-
-        ui->widget->logic->matrix[temp[0]][temp[1]] = temp[2];
+    if(ui->widget->logic->vector.length()-1>0){
+        int *t = new int[3];
+        t[0]=ui->widget->logic->vector.last()[0];
+        t[1]=ui->widget->logic->vector.last()[1];
+        t[2]=ui->widget->logic->vector.last()[2];
+        ui->widget->logic->vector.remove(ui->widget->logic->vector.length()-1);
+        ui->widget->logic->undo_vector.append(t);
+        ui->widget->chooseGrid=false;
+        ui->widget->chooseNum=false;
+        qDebug()<<ui->widget->logic->vector.last()[0]<<" "<<ui->widget->logic->vector.last()[1]<<" "<<ui->widget->logic->vector.last()[2];
         ui->widget->repaint();
     }
     else{
-        qDebug()<<"can't undo! no log!";
+        qDebug()<<"can't undo";
+        QApplication::beep();
     }
 }
 
@@ -404,6 +320,8 @@ void MainWindow::on_stage3_clicked()
     isStart = true;
     ui->frame->show();
     ui->frame_2->hide();
+    ui->widget->chooseGrid=false;
+    ui->widget->chooseNum=false;
     ui->widget->logic->setStage(3);
 }
 
@@ -475,28 +393,19 @@ void MainWindow::on_stage9_clicked()
 
 void MainWindow::on_nextdo_clicked()
 {
-    int temp[3];
-    for(int i=0;i<3;i++)
-        temp[i]=ui->widget->logic->predo[0][i];
-
-    if(temp[0]!=-1 && temp[1]!=-1){
-        for(int i=0;i<9;i++){
-            for(int j=0;j<3;j++)
-                ui->widget->logic->predo[i][j]=ui->widget->logic->predo[i+1][j];
-        }
-        for(int i=8;i>0;i--){
-            for(int j=0;j<3;j++){
-                ui->widget->logic->undo[i][j]=ui->widget->logic->undo[i-1][j];
-            }
-        }
-        ui->widget->logic->undo[0][0]=temp[0];
-        ui->widget->logic->undo[0][1]=temp[1];
-        ui->widget->logic->undo[0][2]=ui->widget->logic->matrix[temp[0]][temp[1]];
-
-        ui->widget->logic->matrix[temp[0]][temp[1]] = temp[2];
-        ui->widget->repaint();
+    if(ui->widget->logic->undo_vector.length()>0){
+    int *t = new int[3];
+    t[0]=ui->widget->logic->undo_vector.last()[0];
+    t[1]=ui->widget->logic->undo_vector.last()[1];
+    t[2]=ui->widget->logic->undo_vector.last()[2];
+    ui->widget->logic->undo_vector.remove(ui->widget->logic->undo_vector.length()-1);
+    ui->widget->logic->vector.append(t);
+    ui->widget->chooseGrid=false;
+    ui->widget->chooseNum=false;
+    ui->widget->repaint();
     }
     else{
-        qDebug()<<"can't cancel undo!";
+        qDebug()<<"can't cancel undo";
+        QApplication::beep();
     }
 }

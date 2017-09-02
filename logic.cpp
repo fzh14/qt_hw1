@@ -1,4 +1,5 @@
 #include "logic.h"
+#include <QVector>
 
 
 Logic::Logic()
@@ -18,12 +19,6 @@ Logic::Logic()
                  {2,4,-1,5,8,3,7,1,9},
                  {9,-1,5,2,4,1,3,-1,6}
                 };
-    for(int i=0;i<10;i++){
-        for(int j=0;j<3;j++){
-            undo[i][j]=-1;
-            predo[i][j]=-1;
-        }
-    }
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
             label[i][j]=0;
@@ -36,6 +31,11 @@ Logic::Logic()
             }
         }
     }
+    for(int i=0;i<9;i++)
+        for(int j=0;j<9;j++)
+            for(int k=0;k<10;k++){
+                grid_num[i][j][k]=0;
+            }
 }
 
 void Logic::setStage(int n){

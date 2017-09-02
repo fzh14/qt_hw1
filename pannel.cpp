@@ -19,6 +19,7 @@ pannel::pannel(QWidget *parent):QWidget(parent),logic(new Logic())
 void pannel::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
+    logic->grid_clear();
     if (chooseNum == true){
         qDebug()<<"GridNum:"<<grid_num;
         p.setPen(Qt::white);
@@ -57,12 +58,14 @@ void pannel::paintEvent(QPaintEvent *event)
                     p.setFont(font);
                     if(logic->initial[i][j]==1){
                         p.setPen(Qt::black);
+                        QString s = QString::number(logic->matrix[i][j]);
+                        p.drawText(j*60+20,i*60+20,60,60,0,s);
                     }
                     else{
                         p.setPen(Qt::darkGray);
                     }
-                    QString s = QString::number(logic->matrix[i][j]);
-                    p.drawText(j*60+20,i*60+20,60,60,0,s);
+                    /*QString s = QString::number(logic->matrix[i][j]);
+                    p.drawText(j*60+20,i*60+20,60,60,0,s);*/
                 }
                 if(logic->label[i][j] != 0){
                     p.setPen(Qt::red);
@@ -71,6 +74,60 @@ void pannel::paintEvent(QPaintEvent *event)
                 }
             }
         }
+        for(int i=0;i<logic->vector.length();i++){
+            int temp_y = logic->vector.at(i)[0];
+            int temp_x = logic->vector.at(i)[1];
+            int temp_value = logic->vector.at(i)[2];
+            if(temp_value == -2){
+                for(int p=0;p<10;p++){
+                    logic->grid_num[temp_y][temp_x][p]=0;
+                }
+            }
+            else{
+                logic->grid_num[temp_y][temp_x][temp_value] = 1;
+            }
+        }
+        for(int i=0;i<9;i++)
+            for(int j=0;j<9;j++){
+                if(logic->initial[i][j]==0){
+                    int count = 0;
+                    for(int k=0;k<10;k++){
+                        count += logic->grid_num[i][j][k];
+                    }
+                    if(count == 1){
+                        for(int k=0;k<10;k++){
+                            if(logic->grid_num[i][j][k]==1){
+                                if(k==grid_num && chooseNum==true){
+                                p.setPen(Qt::white);
+                                p.setBrush(Qt::yellow);
+                                p.drawRect(j*60+10,i*60+10,40,40);
+                                }
+                                QFont font("Helvetica");
+                                font.setPixelSize(40);
+                                p.setFont(font);
+                                p.setPen(Qt::darkGray);
+                                QString s = QString::number(k);
+                                p.drawText(j*60+20,i*60+20,60,60,0,s);
+                                logic->matrix[i][j]=k;
+                            }
+                        }
+                    }
+                    else if(count >1){
+                        logic->matrix[i][j]=-1;
+                        QFont font("Helvetica");
+                        font.setPixelSize(15);
+                        p.setFont(font);
+                        p.setPen(Qt::darkGray);
+                        for(int k=0;k<10;k++){
+                            if(logic->grid_num[i][j][k]==1){
+                                QString s = QString::number(k);
+                                p.drawText(j*60+(0.5+((k-1)%3))*18,i*60+18*(0.5+((k-1)/3)),18,18,0,s);
+                            }
+                        }
+                    }
+                }
+            }
+
         if (chooseGrid == true){
             int num_x = (int)grid_x/60;
             int num_y = (int)grid_y/60;
@@ -83,12 +140,14 @@ void pannel::paintEvent(QPaintEvent *event)
             p.drawLine(0,num_y*60,540,num_y*60);
             p.drawLine(0,num_y*60+60,540,num_y*60+60);
         }
+
         if(logic->check()==true){
             QFont font("Helvetica");
             font.setPixelSize(100);
             p.setFont(font);
             p.setPen(Qt::red);
             p.drawText(150,200,200,200,0,"YES");
+            QApplication::beep();
         }
         //p.setBrush(Qt::black);
         //p.drawEllipse(0, 0, extent, extent);
